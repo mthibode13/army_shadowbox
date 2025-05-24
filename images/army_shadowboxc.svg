@@ -22,11 +22,19 @@
        y="9.1115761"
        transform="translate(-165.46219,-9.1115761)" /></g><g
      id="layer1"
-     transform="translate(-165.46219,-9.1115761)"><rect
-       style="opacity:0.30137;fill:none;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       id="rect2"
-       width="36.5"
-       height="36.499504"
-       x="174.88142"
-       y="20.002556"
-       data-url=" https://en.wikipedia.org/wiki/Bronze_Star_Medal" /></g></svg>
+     transform="translate(-165.46219,-9.1115761)">
+<a
+   xlink:href="https://en.wikipedia.org/wiki/Bronze_Star_Medal"
+   target="_blank"
+   id="a1">
+  <rect
+   style="opacity:0.30137;fill:none;fill-opacity:1;stroke:none;stroke-width:0.264583"
+   id="rect2"
+   width="36.5"
+   height="36.499504"
+   x="174.88142"
+   y="20.002556" />
+  <title
+   id="title1">Bronze Star Medal</title>
+</a>
+</g></svg>
