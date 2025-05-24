@@ -53,18 +53,13 @@
      inkscape:label="Interactive Layer"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-165.46219,-9.1115761)"><rect
-       style="opacity:0.30137;fill:none;fill-opacity:1;stroke-width:0.264583;stroke:none"
-       id="rect2"
-       width="36.5"
-       height="36.499504"
-       x="174.88142"
-       y="20.002556"
-       data-url=" https://en.wikipedia.org/wiki/Bronze_Star_Medal" /><rect
-       style="opacity:0.30137;fill:none;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       id="rect3"
-       width="35.028"
-       height="37.676907"
-       x="175.76447"
-       y="20.296909"
-       data-url="https://en.wikipedia.org/wiki/Bronze_Star_Medal" /></g></svg>
+     transform="translate(-165.46219,-9.1115761)"><a xlink:href="https://en.wikipedia.org/wiki/Bronze_Star_Medal" target="_blank">
+  <rect
+    style="opacity:0.30137;fill:none;fill-opacity:1;stroke-width:0.264583;stroke:none; cursor: pointer;"
+    id="rect2"
+    width="36.5"
+    height="36.499504"
+    x="174.88142"
+    y="20.002556" />
+  <title>Bronze Star Medal</title>
+</a>
