@@ -1,13 +1,661 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta name="generator" content="Hugo 0.147.5">
-  <meta charset="utf-8">
-  <title>Army Shadowbox</title>
+<title>Shadow Box</title>
+<meta name="description" content="A great way to document your military experiences.">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+
+<style>
+body {
+font-family: sans-serif;
+margin: 0;
+padding: 20px;
+background-color: #f0f0f0;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+box-sizing: border-box;
+}
+
+.movie-screen-radio-trigger {
+display: none;
+}
+
+/* New wrapper for the wood texture frame */
+#wood-texture-frame {
+width: 981px; /* Original width of arrange-parent-container */
+height: 525px; /* Original height of arrange-parent-container */
+position: relative;
+background-image: url('Box/wood.jpeg'); /* Path to your wood texture */
+background-size: cover; /* Or 'repeat' if your image is a tileable texture */
+padding: 30px; /* Adjust this value to change the frame's thickness */
+box-sizing: border-box; /* Padding and border included in width/height */
+/* Optional: A darker outer edge for the wood frame itself */
+border: 2px solid #4a3B31; /* Dark brown wood edge color */
+box-shadow: 0 10px 20px rgba(0,0,0,0.5); /* Original shadow effect */
+border-radius: 8px; /* Original border-radius, now on the outer frame */
+margin-bottom: 20px; /* Original margin-bottom */
+}
+
+#arrange-parent-container {
+width: 100%; /* Fills the padded area of #wood-texture-frame */
+height: 100%; /* Fills the padded area of #wood-texture-frame */
+position: relative; /* Remains for positioning of its children */
+background-color: black; /* Background of the content area */
+overflow: hidden;
+/* border, box-shadow, border-radius, margin-bottom are now handled by #wood-texture-frame */
+border: none; /* Remove previous CSS border */
+border-radius: 0px; /* Content area typically has no radius, or a smaller one if desired */
+}
+
+.sbItem {
+user-select: none;
+margin: 0px;
+cursor: pointer;
+position: absolute;
+display: block;
+}
+
+.sbItem a {
+display: block;
+width: 100%;
+height: 100%;
+text-decoration: none;
+color: inherit;
+}
+
+.sbItem img {
+display: block;
+width: 100%;
+height: 100%;
+object-fit: contain;
+border: none;
+}
+
+.sbItem[data-tooltip]::after {
+content: attr(data-tooltip);
+position: absolute;
+background-color: #333;
+color: #fff;
+padding: 8px 12px;
+border-radius: 4px;
+font-size: 0.9em;
+font-family: sans-serif;
+white-space: normal;
+max-width: 280px;
+line-height: 1.4;
+text-align: left;
+opacity: 0;
+visibility: hidden;
+transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+z-index: 10000;
+pointer-events: none;
+box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.sbItem[data-tooltip]:not(.tooltip-below):not(.tooltip-right)::after {
+bottom: 105%;
+left: 50%;
+transform: translateX(-50%);
+}
+
+.sbItem.tooltip-below[data-tooltip]::after {
+top: 105%;
+left: 50%;
+transform: translateX(-50%);
+}
+.sbItem.tooltip-right[data-tooltip]::after {
+left: 102%;
+top: 50%;
+bottom: auto;
+transform: translateY(-50%);
+}
+
+.sbItem[data-tooltip]:hover::after {
+opacity: 1;
+visibility: visible;
+}
+
+#movie-screen-display {
+display: none;
+width: 981px;
+max-width: 95vw;
+margin-top: 10px;
+padding: 20px;
+background-color: #282c34;
+color: #f0f0f0;
+border: 3px solid #444;
+border-radius: 8px;
+box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+text-align: center;
+}
+
+.movie-content-item {
+display: none;
+padding: 10px;
+text-align: left;
+}
+
+.movie-content-item img.detail-map,
+.movie-content-item img.detail-photo {
+max-width: 100%;
+height: auto;
+border: 1px solid #555;
+margin: 10px auto;
+display: block;
+}
+.movie-content-item h4 {
+margin-top: 0;
+margin-bottom: 15px;
+color: #61dafb;
+text-align: center;
+font-size: 1.4em;
+}
+.movie-content-item p {
+line-height: 1.6;
+margin-bottom: 10px;
+}
+.movie-content-item strong {
+color: #82eefd;
+}
+
+.movie-content-item .multi-panel-layout {
+display: flex;
+flex-wrap: wrap;
+gap: 15px;
+margin-bottom: 20px;
+}
+
+.movie-content-item .panel {
+flex: 1 1 calc(50% - 10px);
+background-color: #3a3f47;
+padding: 15px;
+border-radius: 4px;
+box-sizing: border-box;
+min-width: calc(50% - 10px);
+}
+.movie-content-item .panel img.panel-image {
+width: 100%;
+height: auto;
+max-height: 200px;
+object-fit: cover;
+border-radius: 3px;
+margin-bottom: 10px;
+}
+.movie-content-item .panel h5 {
+margin-top: 0;
+margin-bottom: 10px;
+color: #82eefd;
+font-size: 1.1em;
+}
+.movie-content-item .panel p {
+font-size: 0.9em;
+line-height: 1.5;
+margin-bottom: 8px;
+}
+
+.movie-content-item .narrative-section {
+margin-top: 20px;
+padding: 15px;
+background-color: #3a3f47;
+border-radius: 4px;
+text-align: left;
+}
+.movie-content-item .narrative-section h5 {
+text-align: center;
+color: #61dafb;
+margin-bottom: 10px;
+}
+
+
+#radio-movie-screen-off:checked ~ #movie-screen-display {
+display: none;
+}
+
+/* CSS selectors for showing movie content */
+#radio-sb-item-1:checked ~ #movie-screen-display #movie-content-sb-item-1,
+#radio-sb-item-2:checked ~ #movie-screen-display #movie-content-sb-item-2,
+#radio-sb-item-3:checked ~ #movie-screen-display #movie-content-sb-item-3,
+#radio-sb-item-4:checked ~ #movie-screen-display #movie-content-sb-item-4,
+#radio-sb-item-5:checked ~ #movie-screen-display #movie-content-sb-item-5,
+#radio-sb-item-6:checked ~ #movie-screen-display #movie-content-sb-item-6,
+#radio-sb-item-7:checked ~ #movie-screen-display #movie-content-sb-item-7,
+#radio-sb-item-8:checked ~ #movie-screen-display #movie-content-sb-item-8,
+#radio-sb-item-9:checked ~ #movie-screen-display #movie-content-sb-item-9,
+#radio-sb-item-10:checked ~ #movie-screen-display #movie-content-sb-item-10,
+#radio-sb-item-11:checked ~ #movie-screen-display #movie-content-sb-item-11,
+#radio-sb-item-12:checked ~ #movie-screen-display #movie-content-sb-item-12,
+#radio-sb-item-13:checked ~ #movie-screen-display #movie-content-sb-item-13,
+#radio-sb-item-14:checked ~ #movie-screen-display #movie-content-sb-item-14,
+#radio-sb-item-15:checked ~ #movie-screen-display #movie-content-sb-item-15,
+#radio-sb-item-16:checked ~ #movie-screen-display #movie-content-sb-item-16,
+#radio-sb-item-17:checked ~ #movie-screen-display #movie-content-sb-item-17,
+#radio-sb-item-18:checked ~ #movie-screen-display #movie-content-sb-item-18,
+#radio-sb-item-19:checked ~ #movie-screen-display #movie-content-sb-item-19,
+#radio-sb-item-20:checked ~ #movie-screen-display #movie-content-sb-item-20,
+#radio-sb-item-21:checked ~ #movie-screen-display #movie-content-sb-item-21,
+#radio-sb-item-22:checked ~ #movie-screen-display #movie-content-sb-item-22,
+#radio-sb-item-23:checked ~ #movie-screen-display #movie-content-sb-item-23,
+#radio-sb-item-24:checked ~ #movie-screen-display #movie-content-sb-item-24,
+#radio-sb-item-25:checked ~ #movie-screen-display #movie-content-sb-item-25,
+#radio-sb-item-26:checked ~ #movie-screen-display #movie-content-sb-item-26,
+#radio-sb-item-27:checked ~ #movie-screen-display #movie-content-sb-item-27,
+#radio-sb-item-28:checked ~ #movie-screen-display #movie-content-sb-item-28,
+#radio-sb-item-29:checked ~ #movie-screen-display #movie-content-sb-item-29,
+#radio-sb-item-30:checked ~ #movie-screen-display #movie-content-sb-item-30,
+#radio-sb-item-31:checked ~ #movie-screen-display #movie-content-sb-item-31,
+#radio-sb-item-32:checked ~ #movie-screen-display #movie-content-sb-item-32,
+#radio-sb-item-33:checked ~ #movie-screen-display #movie-content-sb-item-33,
+#radio-sb-item-34:checked ~ #movie-screen-display #movie-content-sb-item-34,
+#radio-sb-item-35:checked ~ #movie-screen-display #movie-content-sb-item-35,
+#radio-sb-item-36:checked ~ #movie-screen-display #movie-content-sb-item-36,
+#radio-sb-item-37:checked ~ #movie-screen-display #movie-content-sb-item-37,
+#radio-sb-item-38:checked ~ #movie-screen-display #movie-content-sb-item-38,
+#radio-sb-item-39:checked ~ #movie-screen-display #movie-content-sb-item-39,
+#radio-sb-item-40:checked ~ #movie-screen-display #movie-content-sb-item-40,
+#radio-sb-item-41:checked ~ #movie-screen-display #movie-content-sb-item-41,
+#radio-sb-item-42:checked ~ #movie-screen-display #movie-content-sb-item-42,
+#radio-sb-item-43:checked ~ #movie-screen-display #movie-content-sb-item-43,
+#radio-sb-item-44:checked ~ #movie-screen-display #movie-content-sb-item-44,
+#radio-sb-item-45:checked ~ #movie-screen-display #movie-content-sb-item-45,
+#radio-sb-item-46:checked ~ #movie-screen-display #movie-content-sb-item-46,
+#radio-sb-item-47:checked ~ #movie-screen-display #movie-content-sb-item-47,
+#radio-sb-item-48:checked ~ #movie-screen-display #movie-content-sb-item-48,
+#radio-sb-item-49:checked ~ #movie-screen-display #movie-content-sb-item-49,
+#radio-sb-item-50:checked ~ #movie-screen-display #movie-content-sb-item-50,
+#radio-sb-item-51:checked ~ #movie-screen-display #movie-content-sb-item-51,
+#radio-sb-item-52:checked ~ #movie-screen-display #movie-content-sb-item-52,
+#radio-sb-item-53:checked ~ #movie-screen-display #movie-content-sb-item-53 {
+  display: block;
+}
+
+input.movie-screen-radio-trigger:checked:not(#radio-movie-screen-off) ~ #movie-screen-display {
+display: block;
+}
+.movie-screen-close-button-area {
+text-align: right;
+margin-bottom: 15px;
+}
+.movie-screen-close-button {
+display: inline-block;
+padding: 8px 15px;
+background-color: #61dafb;
+color: #282c34;
+border-radius: 5px;
+cursor: pointer;
+font-weight: bold;
+}
+.movie-screen-close-button:hover {
+background-color: #78e3ff;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+#wood-texture-frame,
+#movie-screen-display { width: 90vw; }
+#wood-texture-frame { padding: 20px; }
+}
+@media (max-width: 768px) {
+body { padding: 10px; }
+#wood-texture-frame,
+#movie-screen-display { width: 95vw; }
+#wood-texture-frame { padding: 15px; }
+}
+@media (max-width: 600px) {
+.movie-content-item .panel {
+flex: 1 1 100%;
+min-width: 100%;
+}
+#wood-texture-frame { padding: 10px; }
+}
+@media (max-width: 480px) {
+body { padding: 5px; }
+#wood-texture-frame {
+width: 98vw;
+height: calc(98vw * (525 / 981) + 2 * 5px);
+padding: 5px;
+border-width: 1px;
+}
+#movie-screen-display { width: 98vw; padding: 10px;}
+.sbItem[data-tooltip]::after { font-size: 0.8em; padding: 4px 6px; max-width: 200px; }
+.movie-screen-close-button { padding: 6px 10px; font-size: 0.9em;}
+.year-icon {
+  display: inline-block;
+  height: 20px; /* Adjust this to your desired height */
+  width: 8px;  /* Adjust this for the thinness you want */
+  background-color: #cab473; /* Gold color from your image (approximate) */
+  margin: 0 2px; /* Spacing between icons */
+  border-radius: 2px; /* Optional: Rounded edges */
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Optional: Subtle shadow */
+}
+</style>
 </head>
-<body style="text-align:center; padding-top: 50px;">
-  <h1>My Army Career Shadowbox</h1>
-  <img src="https://mthibode13.github.io/army_shadowbox/images/army_shadowbox.svg" alt="Army Shadowbox" style="max-width:90%; height:auto;" />
+<body>
+
+<input type="radio" name="movieScreenToggle" id="radio-movie-screen-off" class="movie-screen-radio-trigger" checked>
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-1" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-2" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-3" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-4" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-5" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-6" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-7" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-8" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-9" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-10" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-11" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-12" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-13" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-14" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-15" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-16" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-17" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-18" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-19" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-20" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-21" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-22" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-23" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-24" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-25" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-26" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-27" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-28" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-29" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-30" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-31" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-32" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-33" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-34" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-35" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-36" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-37" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-38" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-39" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-40" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-41" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-42" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-43" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-44" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-45" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-46" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-47" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-48" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-49" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-50" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-51" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-52" class="movie-screen-radio-trigger">
+<input type="radio" name="movieScreenToggle" id="radio-sb-item-53" class="movie-screen-radio-trigger">
+
+<div id="wood-texture-frame">
+<div id="arrange-parent-container">
+<div style="position: relative; width: 100%; height: 100%;">
+<label class="sbItem tooltip-right" for="radio-sb-item-1" id="visual-sb-item-1" data-tooltip="Army Hat Crest" style="top: 0.38%; left: 0.76%; width: 8.05%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/Army Hat Crest1.png" alt="Army Hat Crest1"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-2" id="visual-sb-item-2" data-tooltip="Name Plate" style="top: 0.19%; left: 81.45%; width: 18.35%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/Name Plate.png" alt="Name Plate"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-3" id="visual-sb-item-3" data-tooltip="Joint Chiefs Insignia" style="top: 1.33%; left: 44.75%; width: 10.70%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/Joint Chiefs Insignia.png" alt="Joint Chiefs Insignia"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-4" id="visual-sb-item-4" data-tooltip="More Information" style="top: 5.59%; left: 83.00%; width: 1.95%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/bit.ly_3ZBXDYP.svg" alt="More Info"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-5" id="visual-sb-item-5" data-tooltip="Army Retirement Pin" style="top: 2.48%; left: 94.90%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/Army Retirement Pin.png" alt="Army Retirement Pin"></a>
+</label>
+<label class="sbItem tooltip-right" for="radio-sb-item-6" id="visual-sb-item-6" data-tooltip="The Army Service Ribbon is awarded after completion of initial entry (basic) training." style="top: 15.00%; left: 2.38%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/ASR.png" alt="Army Service Ribbon"></a>
+</label>
+<label class="sbItem tooltip-right" for="radio-sb-item-7" id="visual-sb-item-7" data-tooltip="Dieu Et Moi Crest 2nd Battalion 156th Infantry, Mechanized" style="top: 13.71%; left: 18.96%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/Dieu Et Moi Crest 2 156.png" alt="Dieu Et Moi Crest 2 156"></a>
+</label>
+<label class="sbItem tooltip-right" for="radio-sb-item-8" id="visual-sb-item-8" data-tooltip="Signal Corps Crest" style="top: 13.50%; left: 26.20%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/Signal Corps Crest.png" alt="Signal Corps Crest"></a>
+</label>
+<label class="sbItem tooltip-right" for="radio-sb-item-9" id="visual-sb-item-9" data-tooltip="1st Information Operations Command (Land) Crest" style="top: 13.50%; left: 33.33%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/1st IO Cmd Crest.png" alt="1st IO Cmd Crest"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-10" id="visual-sb-item-10" data-tooltip="Information and Security Command Crest" style="top: 14.10%; left: 58.10%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/INSCOM Crest.png" alt="INSCOM Crest"></a>
+</label>
+<label class="sbItem tooltip-right" for="radio-sb-item-11" id="visual-sb-item-11" data-tooltip="1st Information Operations Command (Land) Crest" style="top: 14.09%; left: 65.00%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/1st IO Command (L) Crest.png" alt="1st IO Command (L) Crest"></a>
+</label>
+<label class="sbItem tooltip-right" for="radio-sb-item-12" id="visual-sb-item-12" data-tooltip="First Corps Crest" style="top: 14.09%; left: 72.20%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/I Corps Crest.png" alt="I Corps Crest"></a>
+</label>
+<label class="sbItem tooltip-right" for="radio-sb-item-13" id="visual-sb-item-13" data-tooltip="Colonel Rank" style="top: 23.61%; left: 0.41%; width: 6.83%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/COL L Rank.png" alt="COL L Rank"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-14" id="visual-sb-item-14" data-tooltip="NATO Medal" style="top: 25.14%; left: 8.00%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/NATO_Medal" target="_blank" rel="noopener noreferrer"><img src="Box/NATO Medal.png" alt="NATO Medal"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-15" id="visual-sb-item-15" data-tooltip="Armed Forces Expeditionary Medal" style="top: 25.14%; left: 13.71%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Armed_Forces_Expeditionary_Medal" target="_blank" rel="noopener noreferrer"><img src="Box/AFEM.png" alt="AFEM"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-16" id="visual-sb-item-16" data-tooltip="Reserve Medal" style="top: 25.14%; left: 19.42%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Armed_Forces_Reserve_Medal" target="_blank" rel="noopener noreferrer"><img src="Box/Reserve Medal.png" alt="Reserve Medal"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-17" id="visual-sb-item-17" data-tooltip="Korea Defense Medal" style="top: 25.14%; left: 25.13%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Korea_Defense_Service_Medal" target="_blank" rel="noopener noreferrer"><img src="Box/Korea Defense Medal.png" alt="Korea Defense Medal"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-18" id="visual-sb-item-18" data-tooltip="Global War on Terrorism Medal" style="top: 25.14%; left: 30.84%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Global_War_on_Terrorism_Service_Medal" target="_blank" rel="noopener noreferrer"><img src="Box/GWOT Medal.png" alt="GWOT Medal"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-19" id="visual-sb-item-19" data-tooltip="Global War on Terrorism Expeditionary" style="top: 25.14%; left: 36.55%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Global_War_on_Terrorism_Expeditionary_Medal" target="_blank" rel="noopener noreferrer"><img src="Box/GWOT-E.png" alt="GWOT-E"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-20" id="visual-sb-item-20" data-tooltip="Iraq Campaign Medal" style="top: 25.14%; left: 42.26%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Iraq_Campaign_Medal" target="_blank" rel="noopener noreferrer"><img src="Box/Iraq Campaign Medal.png" alt="Iraq Campaign Medal"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-21" id="visual-sb-item-21" data-tooltip="Joint Forces Commendation Medal" style="top: 25.14%; left: 47.97%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Joint_Service_Commendation_Medal" target="_blank" rel="noopener noreferrer"><img src="Box/JFCOM.png" alt="JFCOM"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-22" id="visual-sb-item-22" data-tooltip="National Defense Service Ribbon" style="top: 25.14%; left: 53.68%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/National_Defense_Service_Medal" target="_blank" rel="noopener noreferrer"><img src="Box/National Defense Service Ribbon.png" alt="National Defense Service Ribbon"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-23" id="visual-sb-item-23" data-tooltip="Army Achievement Medal" style="top: 25.14%; left: 59.39%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Achievement_Medal#Army" target="_blank" rel="noopener noreferrer"><img src="Box/AAM.png" alt="AAM"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-24" id="visual-sb-item-24" data-tooltip="Army Commendation Medal" style="top: 25.14%; left: 65.10%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Commendation_Medal#Army" target="_blank" rel="noopener noreferrer"><img src="Box/ARCOM.png" alt="ARCOM"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-25" id="visual-sb-item-25" data-tooltip="Meritorious Service Medal" style="top: 25.14%; left: 70.81%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Meritorious_Service_Medal_(United_States)" target="_blank" rel="noopener noreferrer"><img src="Box/MSM.png" alt="Meritorious Service Medal"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-26" id="visual-sb-item-26" data-tooltip="Defense Meritorious Service Medal" style="top: 25.14%; left: 76.52%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Defense_Meritorious_Service_Medal" target="_blank" rel="noopener noreferrer"><img src="Box/DMSM.png" alt="Defense Meritorious Service Medal"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-27" id="visual-sb-item-27" data-tooltip="Bronze Star Medal" style="top: 25.14%; left: 82.23%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Bronze_Star_Medal" target="_blank" rel="noopener noreferrer"><img src="Box/Bronze Star.png" alt="Bronze Star"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-28" id="visual-sb-item-28" data-tooltip="Defense Superior Service Medal" style="top: 25.14%; left: 87.94%; width: 5.10%; position: absolute; display: block;">
+<a href="https://en.wikipedia.org/wiki/Defense_Superior_Service_Medal" target="_blank" rel="noopener noreferrer"><img src="Box/DSSM.png" alt="DSSM"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-29" id="visual-sb-item-29" data-tooltip="Colonel Rank" style="top: 23.43%; left: 93.07%; width: 6.83%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/COL Rank R.png" alt="COL Rank R"></a>
+</label>
+<label class="sbItem tooltip-right" for="radio-sb-item-30" id="visual-sb-item-30" data-tooltip="Lieutenant Colonel Rank" style="top: 34.29%; left: 1.22%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/LTC Rank.png" alt="LTC Rank"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-31" id="visual-sb-item-31" data-tooltip="Lieutenant Colonel Rank" style="top: 34.86%; left: 94.09%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/LTC Rank.png" alt="LTC Rank"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-32" id="visual-sb-item-32" data-tooltip="Major Rank" style="top: 46.76%; left: 1.17%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/MAJ Rank.png" alt="MAJ Rank"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-33" id="visual-sb-item-33" data-tooltip="Major Rank" style="top: 46.67%; left: 94.14%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/MAJ Rank.png" alt="MAJ Rank"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-34" id="visual-sb-item-34" data-tooltip="Multi-National Corps Iraq Patch" style="top: 51.80%; left: 25.28%; width: 7.14%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/MNC-I Patch.png" alt="MNC-I Patch"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-35" id="visual-sb-item-35" data-tooltip="Medals Rack" style="top: 52.76%; left: 42.86%; width: 15.29%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/Medals Rack.png" alt="Medals Rack"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-36" id="visual-sb-item-36" data-tooltip="Multi-National Forces Iraq Patch" style="top: 51.80%; left: 67.89%; width: 9.0%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/MNF-I Patch.png" alt="MNF-I Patch"></a>
+</label>
+<label class="sbItem tooltip-right" for="radio-sb-item-37" id="visual-sb-item-37" data-tooltip="Captain Rank" style="top: 60.00%; left: 1.33%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/CPT Rank.png" alt="CPT Rank"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-38" id="visual-sb-item-38" data-tooltip="Louisiana War Medal" style="top: 70.29%; left: 53.55%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/Louisiana War Medal.png" alt="Louisiana War Medal"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-39" id="visual-sb-item-39" data-tooltip="The Army Service Ribbon is awarded after completion of initial entry (basic) training." style="top: 70.29%; left: 42.31%; width: 5.1%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/ASR.png" alt="Army Service Ribbon"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-40" id="visual-sb-item-40" data-tooltip="Army Overseas Service Ribbon" style="top: 70.29%; left: 47.91%; width: 5.1%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/OSR.png" alt="Army Overseas Service Ribbon"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-41" id="visual-sb-item-41" data-tooltip="Captain Rank" style="top: 60.00%; left: 94.29%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/CPT Rank.png" alt="CPT Rank"></a>
+</label>
+<label class="sbItem tooltip-right" for="radio-sb-item-42" id="visual-sb-item-42" data-tooltip="First Lieutenant Rank" style="top: 71.90%; left: 1.17%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/1LT Rank.png" alt="1LT Rank"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-43" id="visual-sb-item-43" data-tooltip="First Lieutenant Rank" style="top: 71.81%; left: 94.09%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/1LT Rank.png" alt="1LT Rank"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-44" id="visual-sb-item-44" data-tooltip="Georgia National Guard Patch" style="top: 75.05%; left: 16.00%; width: 7.14%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/Georgia Nat Guard Patch.png" alt="Georgia Nat Guard Patch"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-45" id="visual-sb-item-45" data-tooltip="ROTC Patch" style="top: 79.62%; left: 7.24%; width: 7.14%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/ROTC Patch.png" alt="ROTC Patch"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-46" id="visual-sb-item-46" data-tooltip="1st Information Operations Command (Land) Patch" style="top: 79.81%; left: 77.37%; width: 7.14%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/1st IO Command (L) Patch.png" alt="1st IO Command (L) Patch"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-47" id="visual-sb-item-47" data-tooltip="256th Infantry Brigade Patch" style="top: 78.86%; left: 31.09%; width: 7.14%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/256th Infantry Brigade Patch.png" alt="256th Infantry Brigade Patch"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-48" id="visual-sb-item-48" data-tooltip="1st Signal Brigade Patch" style="top: 80.38%; left: 40.11%; width: 7.14%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/1st Signal Brigade Patch.png" alt="1st Signal Brigade Patch"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-49" id="visual-sb-item-49" data-tooltip="Information and Security Command Patch" style="top: 79.62%; left: 67.89%; width: 7.14%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/INSCOM Patch.png" alt="INSCOM Patch"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-50" id="visual-sb-item-50" data-tooltip="Army Recruiting Patch" style="top: 81.14%; left: 49.69%; width: 7.14%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/Army Recruiting Patch.png" alt="Army Recruiting Patch"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-51" id="visual-sb-item-51" data-tooltip="United States Military Academy (West Point) Patch" style="top: 81.14%; left: 58.76%; width: 7.14%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/USMA Patch.png" alt="USMA Patch"></a>
+</label>
+<label class="sbItem tooltip-right" for="radio-sb-item-52" id="visual-sb-item-52" data-tooltip="Second Lieutenant Rank" style="top: 84.19%; left: 1.17%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/2LT Rank.png" alt="2LT Rank (Left)"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-53" id="visual-sb-item-53" data-tooltip="Louisiana Army National Guard Patch" style="top: 84.38%; left: 22.27%; width: 7.14%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/Louisiana Army National Guard Patch.png" alt="Louisiana Army National Guard Patch"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-54" id="visual-sb-item-54" data-tooltip="I Corps Patch" style="top: 79.62%; left: 85.93%; width: 7.14%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/I Corps Patch.png" alt="I Corps Patch"></a>
+</label>
+<label class="sbItem" for="radio-sb-item-55" id="visual-sb-item-55" data-tooltip="Second Lieutenant Rank" style="top: 84.19%; left: 94.09%; width: 5.10%; position: absolute; display: block;">
+<a href="#" target="_blank" rel="noopener noreferrer"><img src="Box/2LT Rank.png" alt="2LT Rank (Right)"></a>
+</label>
+</div>
+</div>
+</div>
+<div id="movie-screen-display">
+<div class="movie-screen-close-button-area">
+<label for="radio-movie-screen-off" class="movie-screen-close-button">Close Details</label>
+</div>
+<div id="movie-content-sb-item-1" class="movie-content-item"><h4>Army Hat Crest - In Detail</h4><p><strong>What:</strong> This is the officer's garrison cap insignia for the U.S. Army. It features the Great Seal of the United States. It's worn on the left side of the garrison cap.</p><img src="Box/Army Hat Crest1.png" alt="Army Hat Crest - Detailed view" class="detail-photo" style="max-width: 150px;"><p><strong>When:</strong> Worn throughout an officer's career with the garrison cap. This particular one represents general officer service.</p><p><strong>Where:</strong> Used wherever the garrison cap is the prescribed headgear.</p><p><strong>Who:</strong> Worn by U.S. Army officers.</p></div>
+<div id="movie-content-sb-item-2" class="movie-content-item"><h4>Name Plate - In Detail</h4><img src="Box/Name Plate.png" alt="Name Plate - Detailed view" class="detail-photo" style="max-width: 300px;"><p><strong>What:</strong> Standard U.S. Army nameplate, typically black with white lettering, displaying the wearer's last name. It's worn on the Army Service Uniform (ASU), previously on the Army Green Class A uniform and other service uniforms.</p><p><strong>When:</strong> Worn throughout an individual's Army career when in the appropriate uniform.</p><p><strong>Where:</strong> Positioned on the right side of the uniform coat for males, and aligned with the bottom edge of the nameplate to the top of the top button for females on the ASU coat. Specific regulations dictate placement.</p></div>
+<div id="movie-content-sb-item-3" class="movie-content-item"><h4>Joint Chiefs Insignia - In Detail</h4><p>Content for Joint Chiefs Insignia...</p></div>
+<div id="movie-content-sb-item-4" class="movie-content-item"><h4>US Flag pin - In Detail</h4><p>Content for US Flag pin...</p></div>
+<div id="movie-content-sb-item-5" class="movie-content-item"><h4>Army Retirement Pin - In Detail</h4><p>Content for Army Retirement Pin...</p></div>
+<div id="movie-content-sb-item-6" class="movie-content-item"><h4>Army Service Ribbon (ASR) - In Detail</h4><img src="Box/ASR.png" alt="Army Service Ribbon - Detailed view" class="detail-photo" style="max-width: 200px;"><p><strong>What:</strong> The Army Service Ribbon (ASR) is awarded to members of the U.S. Army for successful completion of initial-entry training. It signifies that a soldier has completed the necessary basic training to become a functional member of the Army.</p><p><strong>When:</strong> Typically awarded after graduating from Advanced Individual Training (AIT). For officers, after completion of their basic officer leader course.</p><p><strong>Where:</strong> Awarded at the training installation where initial-entry training was completed.</p><p><strong>Who:</strong> All members of the Army (Active Duty, Reserves, National Guard) are eligible upon meeting the criteria.</p></div>
+<div id="movie-content-sb-item-7" class="movie-content-item"><h4>Dieu Et Moi Crest 2nd Battalion 156th Infantry, Mechanized - In Detail</h4><p>Content for Dieu Et Moi Crest...</p></div>
+<div id="movie-content-sb-item-8" class="movie-content-item"><h4>Signal Corps Crest - In Detail</h4><p>Content for Signal Corps Crest...</p></div>
+<div id="movie-content-sb-item-9" class="movie-content-item"><h4>1st Information Operations Command (Land) Crest - In Detail</h4><p>Content for 1st IO Cmd Crest...</p></div>
+<div id="movie-content-sb-item-10" class="movie-content-item"><h4>Information and Security Command Crest - In Detail</h4><p>Content for INSCOM Crest...</p></div>
+<div id="movie-content-sb-item-11" class="movie-content-item"><h4>1st Information Operations Command (Land) Crest - In Detail (Duplicate?)</h4><p>Content for 1st IO Command (L) Crest...</p></div>
+<div id="movie-content-sb-item-12" class="movie-content-item"><h4>First Corps Crest - In Detail</h4><p>Content for I Corps Crest...</p></div>
+<div id="movie-content-sb-item-13" class="movie-content-item"><h4>Colonel Rank - In Detail</h4><p>Content for COL L Rank...</p></div>
+<div id="movie-content-sb-item-14" class="movie-content-item"><h4>NATO Medal - In Detail</h4><p>Content for NATO Medal...</p></div>
+<div id="movie-content-sb-item-15" class="movie-content-item"><h4>Armed Forces Expeditionary Medal - In Detail</h4><p>Content for AFEM...</p></div>
+<div id="movie-content-sb-item-16" class="movie-content-item"><h4>Reserve Medal - In Detail</h4><p>Content for Reserve Medal...</p></div>
+<div id="movie-content-sb-item-17" class="movie-content-item"><h4>Korea Defense Medal - In Detail</h4><p>Content for Korea Defense Medal...</p></div>
+<div id="movie-content-sb-item-18" class="movie-content-item"><h4>Global War on Terrorism Medal - In Detail</h4><p>Content for GWOT Medal...</p></div>
+<div id="movie-content-sb-item-19" class="movie-content-item"><h4>Global War on Terrorism Expeditionary - In Detail</h4><p>Content for GWOT-E...</p></div>
+<div id="movie-content-sb-item-20" class="movie-content-item"><h4>Iraq Campaign Medal - In Detail</h4><p>Content for Iraq Campaign Medal...</p></div>
+<div id="movie-content-sb-item-21" class="movie-content-item"><h4>Joint Forces Commendation Medal - In Detail</h4><p>Content for JFCOM...</p></div>
+<div id="movie-content-sb-item-22" class="movie-content-item"><h4>National Defense Service Ribbon - In Detail</h4><p>Content for National Defense Service Ribbon...</p></div>
+<div id="movie-content-sb-item-23" class="movie-content-item"><h4>Army Achievement Medal - In Detail</h4><p>Content for AAM...</p></div>
+<div id="movie-content-sb-item-24" class="movie-content-item"><h4>Army Commendation Medal - In Detail</h4><p>Content for ARCOM...</p></div>
+<div id="movie-content-sb-item-25" class="movie-content-item"><h4>Meritorious Service Medal - In Detail</h4><p>Content for MSM...</p></div>
+<div id="movie-content-sb-item-26" class="movie-content-item"><h4>Defense Meritorious Service Medal - In Detail</h4><p>Content for DMSM...</p></div>
+<div id="movie-content-sb-item-27" class="movie-content-item"><h4>Bronze Star Medal - In Detail</h4><p>Content for Bronze Star...</p></div>
+<div id="movie-content-sb-item-28" class="movie-content-item"><h4>Defense Superior Service Medal - In Detail</h4><p>Content for DSSM...</p></div>
+<div id="movie-content-sb-item-29" class="movie-content-item"><h4>Colonel Rank - In Detail</h4><p>Content for COL Rank R...</p></div>
+<div id="movie-content-sb-item-30" class="movie-content-item"><h4>Lieutenant Colonel Rank - In Detail</h4><p>Content for LTC Rank...</p></div>
+<div id="movie-content-sb-item-31" class="movie-content-item"><h4>Lieutenant Colonel Rank - In Detail (Duplicate?)</h4><p>Content for LTC Rank...</p></div>
+<div id="movie-content-sb-item-32" class="movie-content-item"><h4>Major Rank - In Detail</h4><p>Content for MAJ Rank...</p></div>
+<div id="movie-content-sb-item-33" class="movie-content-item"><h4>Major Rank - In Detail (Duplicate?)</h4><p>Content for MAJ Rank...</p></div>
+<div id="movie-content-sb-item-34" class="movie-content-item"><h4>Multi-National Corps Iraq Patch - In Detail</h4><p>Content for MNC-I Patch...</p></div>
+<div id="movie-content-sb-item-35" class="movie-content-item"><h4>Medals Rack - In Detail</h4><p>Content for Medals Rack...</p></div>
+<div id="movie-content-sb-item-36" class="movie-content-item"><h4>Multi-National Forces Iraq Patch - In Detail</h4><p>Content for MNF-I Patch...</p></div>
+<div id="movie-content-sb-item-37" class="movie-content-item"><h4>Captain Rank - In Detail</h4><p>Content for CPT Rank...</p></div>
+<div id="movie-content-sb-item-38" class="movie-content-item"><h4>Louisiana War Medal - In Detail</h4><p>Content for Louisiana War Medal...</p></div>
+<div id="movie-content-sb-item-39" class="movie-content-item"><h4>Army Overseas Service Ribbon - In Detail</h4><p>Content for Army Overseas Service Ribbon...</p></div>
+<div id="movie-content-sb-item-40" class="movie-content-item"><h4>Army Overseas Service Ribbon - In Detail</h4><p>Content for Army Overseas Service Ribbon...</p></div>
+<div id="movie-content-sb-item-41" class="movie-content-item"><h4>Captain Rank - In Detail (Duplicate?)</h4><p>Content for CPT Rank...</p></div>
+<div id="movie-content-sb-item-42" class="movie-content-item"><h4>First Lieutenant Rank - In Detail</h4><p>Content for 1LT Rank...</p></div>
+<div id="movie-content-sb-item-43" class="movie-content-item"><h4>First Lieutenant Rank - In Detail (Duplicate?)</h4><p>Content for 1LT Rank...</p></div>
+<div id="movie-content-sb-item-44" class="movie-content-item"><h4>Georgia National Guard Patch - In Detail</h4><p>Content for Georgia Nat Guard Patch...</p></div>
+<div id="movie-content-sb-item-45" class="movie-content-item"><h4>ROTC Patch - In Detail</h4><p>Content for ROTC Patch...</p></div>
+<div id="movie-content-sb-item-46" class="movie-content-item"><h4>1st Information Operations Command (Land) Patch - In Detail (Duplicate?)</h4><p>Content for 1st IO Command (L) Patch...</p></div>
+<div id="movie-content-sb-item-47" class="movie-content-item"><h4>256th Infantry Brigade Patch - In Detail</h4><p>Content for 256th Infantry Brigade Patch...</p></div>
+<div id="movie-content-sb-item-48" class="movie-content-item"><h4>1st Signal Brigade Patch - In Detail</h4><p>Content for 1st Signal Brigade Patch...</p></div>
+<div id="movie-content-sb-item-49" class="movie-content-item"><h4>Information and Security Command Patch - In Detail</h4><p>Content for INSCOM Patch...</p></div>
+<div id="movie-content-sb-item-50" class="movie-content-item"><h4>Army Recruiting Patch - In Detail</h4><p>Content for Army Recruiting Patch...</p></div>
+<div id="movie-content-sb-item-51" class="movie-content-item"><h4>United States Military Academy (West Point) Patch - In Detail</h4><p>Content for USMA Patch...</p></div>
+<div id="movie-content-sb-item-52" class="movie-content-item">
+<h4>2nd Lieutenant - Commissioning & Early Career (1989-1990)</h4>
+<div class="multi-panel-layout">
+<div class="panel">
+<h5>Georgia Military College & Commissioning</h5>
+<img src="Box/commissioning.jpg" alt="GMC or Commissioning Photo" class="panel-image">
+<p>Competed for an ROTC scholarship at Officer's Basic Camp, Fort Knox. Offered scholarship at Georgia Military College (GMC), Milledgeville. Commissioned in 1989.</p>
+</div>
+<div class="panel">
+<h5>Officer's Basic Course & First Steps</h5>
+<p><strong>What:</strong> Attended Officer's Basic Course at Fort Gordon, Augusta, GA for Signal Corps. Specialized in computers and electronics.</p>
+<p><strong>When:</strong> 1990 (after a 6-month break post-commissioning).</p>
+<p><strong>Where:</strong> Fort Gordon, Augusta, GA.</p>
+</div>
+<div class="panel">
+<h5>Key Locations: Early Career</h5>
+<img src="Box/GMC Map.png" alt="Map highlighting Milledgeville and Augusta, GA" class="panel-image">
+<p>Milledgeville (GMC) and Augusta (Fort Gordon) were pivotal starting points.</p>
+</div>
+<div class="panel">
+<h5>Significance & Early Path</h5>
+<p>Graduated in the top 20% of the OBC class. This period set the stage for an initial assignment as a Battalion Signal Officer, a deviation from a desired infantry path but an area of aptitude.</p>
+</div>
+</div>
+<div class="narrative-section">
+<h5>Full Narrative: The Beginning</h5>
+<p>After graduating high school in 1987, I competed for a two-year ROTC scholarship at the Officer's Basic Camp at Fort Knox and was fortunate to earn one to Georgia Military (Junior) College (GMC). My path to GMC was somewhat serendipitous: I had sent my ACT scores there on a whim, simply because there were free slots to use when I took the test. While scanning college lists—excluding local options like USL (now UL) and LSU—I specifically sought out military colleges, as my hopes for the Naval Academy had been dashed by a height requirement I read about in a brochure.</p>
+<p>That summer, my attempt to join the Marine Corps was thwarted by an ASVAB score deemed too low. Subsequently, I received mail offers for the enlisted submarine track, which didn't align with my aspirations. The turning point came with a call from Major Toler at GMC. He offered me an academic scholarship based on my ACT scores and GPA, guaranteeing it and adding that strong performance at the mandatory summer camp could lead to an ROTC scholarship. I accepted the challenge, and alongside about nine peers, I made it through. Life in Milledgeville was tough, but feeling I couldn't go back home, I was determined to make the most of every opportunity.</p>
+<p>As GMC had an early commissioning program, I was commissioned after just two years. Upon graduating and swearing in, I drove back to Louisiana, hoping to join the Louisiana Infantry with my new commission. However, they had no vacant Infantry platoon positions. Instead, they offered me a role as a battalion signal officer. I embraced the opportunity and, in retrospect, was glad I did. My land navigation skills were only just passing, and I likely would have been a mediocre Infantry officer. In contrast, my keen interest in computers and electronics made the Signal Corps assignment a genuinely enjoyable fit.</p>
+<p>In 1990, while finishing my bachelor's degree at LSU and having just joined my unit, I learned I needed to qualify at the Officer's Basic Course at Fort Gordon, Augusta, Georgia, or risk losing my unit position and free tuition. I took a six-month break from school to attend the course, did well, and graduated in the top 20% of my class.</p>
+<p>Immediately following the basic course, I went onto active duty with the 2nd Battalion, 256th Infantry Brigade (Mechanized), a roundout brigade for the 5th Infantry Division based out of Fort Polk. We mobilized and conducted training from squad to battalion levels, but by the time we were ready, the Gulf War had concluded. Interestingly, according to General Norman Schwarzkopf's aide-de-camp, General BB Bell, the U.S. objective had been to conclude the conflict faster than Israel's victory in the Six Day War. The U.S. campaign lasted 100 hours before Saddam Hussein's surrender was accepted.</p>
+</div>
+</div>
+<div id="movie-content-sb-item-53" class="movie-content-item"><h4>Louisiana Army National Guard Patch - In Detail</h4><p>Content for Louisiana Army National Guard Patch...</p></div>
+<div id="movie-content-sb-item-54" class="movie-content-item"><h4>I Corps Patch - In Detail</h4><p>Content for I Corps Patch...</p></div>
+<div id="movie-content-sb-item-55" class="movie-content-item"><h4>Second Lieutenant Rank - In Detail (Duplicate?)</h4><p>Content for 2LT Rank (Right)...</p></div>
+
+</div>
+
 </body>
 </html>
-
