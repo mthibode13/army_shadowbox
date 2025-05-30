@@ -1,0 +1,1 @@
+This is a way to quickly prepare your shadowbox downloaded from an online service for publication to the web. It simply takes the image you downloaded or captured from the online site and prepares it for publication to github or some other hosting service. 
